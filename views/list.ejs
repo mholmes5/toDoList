@@ -1,25 +1,31 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>ToDoList</title>
-  </head>
-  <body>
 
-    <h1 style="color:maroon"><%=day%></h1>
+<head>
+  <meta charset="utf-8">
+  <title>ToDoList</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
 
-    <ul>
-      <%for(let i=0;i<newListItems.length;i++){%>
+<body>
 
-        <li><%=newListItems[i]%></li>
+  <div class="box" id="heading">
+    <h1><%=day%></h1>
+  </div>
 
-      <%}%>
+  <div class="box">
+    <%for(let i=0;i<newListItems.length;i++){%>
+      <div class="item">
+        <input type="checkbox">
+        <p><%=newListItems[i]%></p>
+      </div>
+    <%}%>
 
-    </ul>
-    <form class="" action="/" method="post">
-      <input type="text" name="newTask" placeholder="New ToDoItem">
-      <button type="submit" name="button">Add Item</button>
+    <form class="item" action="/" method="post">
+      <input type="text" name="newTask" placeholder="New Item" autocomplete="off" autofocus="true">
+      <button type="submit" name="button">+</button>
     </form>
+  </div>
 
   </body>
 </html>

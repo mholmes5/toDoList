@@ -7,6 +7,7 @@ let tasks =["Buy Food","Cook Food","Eat Food"];
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(express.static("public"));
 /*app.get("/", (req,res)=>{
   //res.sendFile(__dirname +"/index.html");
   let today = new Date
@@ -27,7 +28,6 @@ app.get("/", (req,res)=>{
 
   let options = {
     weekday: 'long',
-    year: 'numeric',
     month: 'long',
     day: 'numeric'
   }
