@@ -5,6 +5,21 @@
     <title>ToDoList</title>
   </head>
   <body>
-    <h1>It's a <%=day%>!</h1>
+
+    <h1 style="color:maroon"><%=day%></h1>
+
+    <ul>
+      <%for(let i=0;i<newListItems.length;i++){%>
+
+        <li><%=newListItems[i]%></li>
+
+      <%}%>
+
+    </ul>
+    <form class="" action="/" method="post">
+      <input type="text" name="newTask" placeholder="New ToDoItem">
+      <button type="submit" name="button">Add Item</button>
+    </form>
+
   </body>
 </html>
