@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 
 const app = express();
 
-let tasks =["Buy Food","Cook Food","Eat Food"];
+let tasks =[];
 let workItems = [];
 
 app.set('view engine', 'ejs');
@@ -41,7 +41,7 @@ app.post("/",(req,res)=>{
   //console.log(req.body);
   if(req.body.list==="Work"){
     workItems.push(req.body.newTask);
-    res.redirect("/work");
+    res.redirect("/" +req.body.list);
   }else{
     tasks.push(req.body.newTask);
     res.redirect("/");
@@ -59,6 +59,10 @@ app.post("/work",(req,res)=>{
   res.redirect("/work");
 
 });
+
+app.get("/about",(req,res)=>{
+  res.render("about.ejs");
+})
 
 app.listen(3000, ()=>{
   console.log("Server started on port 3000");
