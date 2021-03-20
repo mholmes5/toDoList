@@ -49,6 +49,7 @@ const defaultItems = [item1, item2, item3];
 app.get("/", function(req, res) {
   const day = date.getDate();
   var tasks =[];
+
   Item.find({},(err, foundItems)=>{
 
     if(foundItems.length === 0){
@@ -62,43 +63,51 @@ app.get("/", function(req, res) {
       });
 
     }else{
-      mongoose.connection.close();
-      console.log(foundItems);
+      //console.log(foundItems);
       res.render("list", {listTitle: day, newListItems: foundItems});
     }
 
   });
 
-  //const day = date.getDate();
+
 
 });
 
-app.post("/", async function(req, res){
+app.get("/:customListName", function(req,res){
+  console.log(req.params.customListName);
+});
+
+app.post("/", function(req, res){
 
   const itemName = req.body.newItem
   const item = new Item({
     name: itemName
   });
 
-  try{
-    const result = await item.save();
-    console.log(item.name);
-  }catch(err){
-    console.log("Error" +err);
-  }
-
-  // item.save(item, function (err,result) {
-  //   if{
-  //     console.log("Error saving: " +err);
-  //   } else {
-  //     res.redirect("/");
-  //   }
-  // });
+  item.save(item, function (err,result) {
+    if(err){
+      console.log("Error saving: " +err);
+    } else {
+      res.redirect("/");
+    }
+  });
 
 });
 
-app.get("/work", function(req,res){
-  res.render("list", {listTitle: "Work List", newListItems: workItems});
+app.post("/delete", function(req,res){
+  const itemId = req.body.checkbox;
+
+  Item.findByIdAndDelete(itemId,function(err){
+    if(err){
+      console.log(err);
+    }else{
+      res.redirect("/");
+    }
+  })
+});
+
+app.get("/:list", function(req,res){
+  console.log(req.params.list);
 });
 
 app.get("/about", function(req, res){
