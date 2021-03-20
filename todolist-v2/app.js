@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 const date = require(__dirname + "/date.js");
-
+const year = date.getYear();
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -36,6 +36,16 @@ const item3 = new Item({
   name: "Get Visa"
 });
 
+const listSchema = {
+  name: {
+    type: String,
+    required: true
+  },
+  items: [itemsSchema]
+};
+
+const List = mongoose.model("List", listSchema);
+
 const defaultItems = [item1, item2, item3];
 
 // Item.insertMany(defaultItems, (err)=>{
@@ -64,7 +74,7 @@ app.get("/", function(req, res) {
 
     }else{
       //console.log(foundItems);
-      res.render("list", {listTitle: day, newListItems: foundItems});
+      res.render("list", {listTitle: day, newListItems: foundItems, year:year});
     }
 
   });
@@ -74,7 +84,31 @@ app.get("/", function(req, res) {
 });
 
 app.get("/:customListName", function(req,res){
-  console.log(req.params.customListName);
+  const customListName = req.params.customListName;
+
+  List.findOne({name:customListName}, function(err,foundList){
+    if(!err){
+      if(!foundList){
+
+        const list = new List({
+          name: customListName,
+          items: defaultItems
+        });
+
+        list.save();
+        console.log("List not Found");
+        res.redirect("/" +customListName);
+      }else{
+        //console.log("Found List: " +foundList);
+        res.render("list", {listTitle:foundList.name, newListItems:foundList.items, year:year})
+      }
+    }else{
+      console.log(err);
+    }
+    //res.render("list", {listTitle:customListName, newListItems:result, year:year})
+  });
+
+
 });
 
 app.post("/", function(req, res){
