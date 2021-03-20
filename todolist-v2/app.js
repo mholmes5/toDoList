@@ -5,7 +5,10 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 
 const date = require(__dirname + "/date.js");
+
+const day = date.getDate();
 const year = date.getYear();
+
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -57,7 +60,7 @@ const defaultItems = [item1, item2, item3];
 // });
 
 app.get("/", function(req, res) {
-  const day = date.getDate();
+
   var tasks =[];
 
   Item.find({},(err, foundItems)=>{
@@ -113,19 +116,29 @@ app.get("/:customListName", function(req,res){
 
 app.post("/", function(req, res){
 
-  const itemName = req.body.newItem
+  const itemName = req.body.newItem;
+  const listName = req.body.list;
+
   const item = new Item({
     name: itemName
   });
 
-  item.save(item, function (err,result) {
-    if(err){
-      console.log("Error saving: " +err);
-    } else {
-      res.redirect("/");
-    }
-  });
-
+  if(listName === day){
+    item.save(item, function (err,result) {
+      if(!err){
+        res.redirect("/");
+      }
+    });
+  }else{
+    List.findOne({name: listName}, function(err,foundList){
+      foundList.items.push(item);
+      foundList.save(item, function (err,result) {
+        if(!err){
+          res.redirect("/" +foundList.name);
+        }
+      });
+    });
+  }
 });
 
 app.post("/delete", function(req,res){
